@@ -2,13 +2,16 @@ require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
 const morgan = require('morgan');
-
+const passport = require('passport');
 const {PORT, CLIENT_ORIGIN} = require('./config');
 const {dbConnect} = require('./db-mongoose');
 
 const app = express();
 
 const {router: userRouter} = require('./users/router');
+const {router: authRouter} = require('./auth/router');
+const {localStrategy, jwtStrategy} = require('./auth/strategies');
+
 
 app.use(
   morgan(process.env.NODE_ENV === 'production' ? 'common' : 'dev', {
@@ -22,7 +25,17 @@ app.use(
   })
 );
 
+passport.use(localStrategy);
+passport.use(jwtStrategy);
+
 app.use('/api/users', userRouter);
+app.use('/api/auth', authRouter);
+
+const jwtAuth = passport.authenticate('jwt', {session: false});
+
+app.get('/api/protected', jwtAuth, (req, res) => {
+  return res.json({answer: 42});
+});
 
 function runServer(port = PORT) {
   const server = app
