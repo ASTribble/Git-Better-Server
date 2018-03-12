@@ -7,26 +7,28 @@ const router = express.Router();
 
 const localAuth = passport.authenticate('local', {session: false});
 
-router.post('/login', localAuth, (req, res) => {
-    console.log(`${req.user.username} successfully logged in.`);
-    return res.json({authToken});
-})
-
 
 const createAuthToken = (user) =>{
   return jwt.sign({user}, config.JWT_SECRET, {
     subject: user.username,
-    algorith: 'HS256',
+    algorithm: 'HS256',
   });
 };
 
+router.use(bodyParser.json());
+
+router.post('/login', localAuth, (req, res) => {
+  console.log(`${req.user.username} successfully logged in.`);
+  const authToken = createAuthToken(req.user.serialize());
+  return res.json({authToken});
+});
 
 const jwtAuth = passport.authenticate('jwt', {session: false});
 
 
 router.post('/refresh', jwtAuth, (req, res) => {
-    const authToken = createAuthToken(req.user);
-    res.json({authToken});
+  const authToken = createAuthToken(req.user);
+  res.json({authToken});
 });
 
 module.exports = {router};
