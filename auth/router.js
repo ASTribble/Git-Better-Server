@@ -12,6 +12,7 @@ router.post('/login', localAuth, (req, res) => {
     return res.json({authToken});
 })
 
+
 const createAuthToken = (user) =>{
   return jwt.sign({user}, config.JWT_SECRET, {
     subject: user.username,
@@ -19,6 +20,13 @@ const createAuthToken = (user) =>{
   });
 };
 
+
 const jwtAuth = passport.authenticate('jwt', {session: false});
+
+
+router.post('/refresh', jwtAuth, (req, res) => {
+    const authToken = createAuthToken(req.user);
+    res.json({authToken});
+});
 
 module.exports = {router};
