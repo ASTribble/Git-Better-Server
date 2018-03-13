@@ -5,12 +5,10 @@ const QuestionSchema = mongoose.Schema({
     text: {
         type: String,
         required: true,
-        unique: true
     },
     answer: {
         type: String,
         required: true,
-        unique: true
     }
 });
 
