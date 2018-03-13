@@ -7,7 +7,15 @@ const jsonParser = bodyParser.json();
 const {DATABASE} = require('../config');
 
 router.get('/', (req, res) => {
-  res.json({question: 'sample question', answer: 'sample answer'});
+  return Question.find()
+    .then((q) => {
+      console.log(q);
+      return res.json(q);
+    })
+    .catch((err) => {
+      console.error(err);
+      return res.send(500).json({message: 'Internal Server Error'});
+    });
 });
 
 
