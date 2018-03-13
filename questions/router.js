@@ -6,8 +6,9 @@ const jsonParser = bodyParser.json();
 
 const {DATABASE} = require('../config');
 
-router.get('/question', (req, res) => {
+router.get('/', (req, res) => {
   res.json({question: 'sample question', answer: 'sample answer'});
 });
+
 
 module.exports = {router};

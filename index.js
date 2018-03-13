@@ -5,11 +5,11 @@ const morgan = require('morgan');
 const passport = require('passport');
 const {PORT, CLIENT_ORIGIN} = require('./config');
 const {dbConnect} = require('./db-mongoose');
-
 const app = express();
 
 const {router: userRouter} = require('./users/router');
 const {router: authRouter} = require('./auth/router');
+const {router: questionRouter} = require('./questions/router');
 const {localStrategy, jwtStrategy} = require('./auth/strategies');
 
 
@@ -36,6 +36,8 @@ const jwtAuth = passport.authenticate('jwt', {session: false});
 app.get('/api/protected', jwtAuth, (req, res) => {
   return res.json({answer: 42});
 });
+
+app.use('/api/questions', jwtAuth, questionRouter);
 
 function runServer(port = PORT) {
   const server = app
