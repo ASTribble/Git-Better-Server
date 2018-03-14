@@ -24,7 +24,8 @@ const UserSchema = mongoose.Schema({
     dateAdded: {
         type: Date,
         default: Date.now
-    }
+    },
+    questions: [],
 });
 
 
