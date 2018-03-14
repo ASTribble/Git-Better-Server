@@ -1,3 +1,5 @@
+'use strict';
+
 const express = require('express');
 const bodyParser = require('body-parser');
 const {Question} = require('./models');
@@ -19,15 +21,15 @@ router.get('/', (req, res) => {
   User.findById(userID)
     .then(user => user.questions)
     .then(questions => {
-     if (questions < 1 || !questions){
-       return Question.find()
-       .then(qs => currentQuestions = qs)
-       .then(() => User.findByIdAndUpdate(userID, {questions: currentQuestions}, {new: true}))
-       .then(u => console.log('user after update:', u)) 
-     }
-     else {
-       currentQuestions = questions;
-     }
+      if (questions < 1 || !questions){
+        return Question.find()
+          .then(qs => currentQuestions = qs)
+          .then(() => User.findByIdAndUpdate(userID, {questions: currentQuestions}, {new: true}))
+          .then(u => console.log('user after update:', u)) 
+      }
+      else {
+        currentQuestions = questions;
+      }
     })
     //change this to only send back currentQuestions[0] when it won't break the client
     .then(() => res.json(currentQuestions))
@@ -35,7 +37,7 @@ router.get('/', (req, res) => {
       console.log('Error:', err);
       return res.send(500).json({message: 'Internal Server Error'});
     }
-  );
+    );
 });
 
 //========================== router.put =============================
@@ -56,7 +58,7 @@ router.put('/', (req, res) => {
       else {              //if the answer was false, take the item that was at the front 
         nextQuestions.splice(1, 0, nextQuestions.shift());  // and splice it into index[1]
       }
-      return User.findByIdAndUpdate(userId, {questions: nextQuestions}, {new: true});  //update the User with the new question list
+      return User.findByIdAndUpdate(userID, {questions: nextQuestions}, {new: true});  //update the User with the new question list
     })
     .then(() => res.send('Next Questions saved and ready'))
     .catch(err => {
