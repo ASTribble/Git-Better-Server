@@ -18,5 +18,11 @@ router.get('/', (req, res) => {
     });
 });
 
+router.put('/', (req, res) => {
+  const user = req.user;
+  console.log(user);
+  console.log(req.body);
+  return res.status(200).send();
+});
 
 module.exports = {router};
