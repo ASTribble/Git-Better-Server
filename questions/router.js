@@ -1,12 +1,20 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const {Question} = require('./models');
+const {Users}
 const router = express.Router();
 const jsonParser = bodyParser.json();
 
 const {DATABASE} = require('../config');
 
 router.get('/', (req, res) => {
+  const userID = req.user.id;
+
+  User.findById(userID)
+    .then(user => user.questions)
+    .then(questions => 
+    console/log(questions));
+
   return Question.find()
     .then((q) => {
       console.log(q);
