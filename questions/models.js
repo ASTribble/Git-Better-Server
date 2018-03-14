@@ -15,7 +15,7 @@ const QuestionSchema = mongoose.Schema({
 QuestionSchema.methods.serialize = function(){
     return {
         id: this._id,
-        quetions: this.question,
+        question: this.question,
         answer: this.answer
     }
 }
@@ -23,3 +23,12 @@ QuestionSchema.methods.serialize = function(){
 const Question = mongoose.model('Question', QuestionSchema);
 
 module.exports = {Question};
+
+// Tauhida Parveen10:56 AM
+// userSchema: questions:[question:, answer, next]
+
+// userSchema.question.next =
+
+// router.post(/answer)
+
+// head = 0
