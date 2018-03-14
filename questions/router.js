@@ -11,7 +11,7 @@ const {DATABASE} = require('../config');
 
 router.get('/', (req, res) => {
   const userID = req.user.id;
-  // console.log('user',req.user.id);
+
   let currentQuestions;
 
   User.findById(userID)
@@ -36,10 +36,32 @@ router.get('/', (req, res) => {
 });
 
 router.put('/', (req, res) => {
-  const user = req.user;
-  console.log(user);
-  console.log(req.body);
-  return res.status(200).send();
+  //req.body { questionId: "21561345612", answer: "true" }
+  // const {questionId, answer} = req.body;
+  let nextQuestions;
+  const userID = req.user.id;
+
+  User.findById(userID)
+    //get the questions back from the user
+    .then(user => nextQuestions = user.questions)
+    .then(() => {
+       //if the req.body.answer is true
+      if(req.body.answer){
+        //push to the end of the array the item that was in the front
+        nextQuestions.push(nextQuestions.shift()); 
+      }
+      else{ 
+        //if the answer was false, take the item that was at the front
+        // and splice it into index[1]
+        nextQuestions.splice(1, 0, nextQuestions.shift());
+      }
+        //update the User with the new question list
+      return User.findByIdAndUpdate(userId, {questions: nextQuestions}, {new: true});
+    })
+    .then(() => res.send('Next Questions saved and ready'))
+    .catch(err => {
+      console.log('Error:', err);
+    });
 });
 
 module.exports = {router};
