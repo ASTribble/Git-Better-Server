@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 mongoose.Promise = global.Promise;
 
 const QuestionSchema = mongoose.Schema({
-    text: {
+    question: {
         type: String,
         required: true,
     },
@@ -15,7 +15,7 @@ const QuestionSchema = mongoose.Schema({
 QuestionSchema.methods.serialize = function(){
     return {
         id: this._id,
-        text: this.text,
+        quetions: this.question,
         answer: this.answer
     }
 }
