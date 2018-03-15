@@ -32,6 +32,7 @@ router.get('/', (req, res) => {
       }
     })
     //change this to only send back currentQuestions[0] when it won't break the client
+    user.questions[user.head]
     .then(() => res.json(currentQuestions))
     .catch(err => {
       console.log('Error:', err);
@@ -71,3 +72,33 @@ router.put('/', (req, res) => {
 });
 
 module.exports = {router};
+
+//Tauhida Parveen7:38 AM
+// question:[]
+
+// question: [{question, answer, next}]
+
+// { question: string, answer: string, next: number
+
+// Tauhida ParveenTauhida Parveen7:50 AM
+// user.questions[user.head]
+
+// [{}{}{}{}{}]
+
+// {x}{y}{z}
+
+// Tauhida ParveenTauhida Parveen7:55 AM
+// {Y}{X}{X}
+
+// {question: Y, answe:, next:X}
+
+// let answeredQuestion = user.head
+
+// user.head = answeredQuestion.next
+
+// Tauhida ParveenTauhida Parveen8:00 AM
+// insertAt(0
+
+// insertAt(4, node)
+
+// user:head {type: NUmber, default: 0}
