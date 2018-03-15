@@ -32,14 +32,50 @@ router.get('/', (req, res) => {
       }
     })
     //change this to only send back currentQuestions[0] when it won't break the client
-    user.questions[user.head]
-    .then(() => res.json(currentQuestions))
+    .then(() => res.json(currentQuestions[0]))
     .catch(err => {
       console.log('Error:', err);
       return res.send(500).json({message: 'Internal Server Error'});
     }
     );
 });
+
+//++++++++++++++++++= REFACTOR GET +++++++++++++++++++++++++++++++++++
+
+
+router.get('/v2', (req, res) => {
+  const userID = req.user.id;
+  console.log('userID')
+
+  User.findById(userID)
+    .then(user => {
+      console.log('user in first findById', user);
+      //can change to if (user.questions[user.head]) return user.questions[user.head],
+      //else do checks for wuestions and head individually
+     if (user.questions < 1 || !user.questions){
+        Question.find()
+          .then(qs => {
+            User.findByIdAndUpdate( userID, 
+              ({questions: qs}, {head: 0}), 
+              {upsert: true, new: true})
+          .then(user => res.json(user.questions[user.head])) 
+            })
+      }
+      else if(!user.head){
+          User.findByIdAndUpdate( userID, {head: 0}, {upsert:true, new:true})
+          .then(user => res.json(user.questions[user.head]))
+      } 
+      else res.json(user.questions[user.head])
+    })
+    .catch(err => {
+      console.log('Error:', err);
+      // return res.send(500).json({message: 'Internal Server Error'});
+    }
+    );
+});
+
+
+
 
 //========================== router.put =============================
 
