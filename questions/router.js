@@ -5,12 +5,12 @@ const bodyParser = require('body-parser');
 const {Question} = require('./models');
 const {User} = require('../users/models');
 const router = express.Router();
-const jsonParser = bodyParser.json();
 const mongoose = require('mongoose');
 mongoose.Promise = global.Promise;
 
 const {DATABASE} = require('../config');
 
+router.use(bodyParser.json());
 //=================== router.get ==============================
 
 router.get('/', (req, res) => {
@@ -45,6 +45,7 @@ router.get('/', (req, res) => {
 router.put('/', (req, res) => {
   //req.body { questionId: "21561345612", answer: "true" }
   // const {questionId, answer} = req.body;
+  console.log('req.body', req.body.answer);
   let nextQuestions;
   const userID = req.user.id;
 
@@ -53,14 +54,17 @@ router.put('/', (req, res) => {
     .then(() => {
       
       if(req.body.answer){     //if the req.body.answer is true
-        nextQuestions.push(nextQuestions.shift());  //push to the end of the array the item that was in the front
+        nextQuestions.push(nextQuestions.shift());
+        console.log('if happened');  //push to the end of the array the item that was in the front
       }
       else {              //if the answer was false, take the item that was at the front 
         nextQuestions.splice(1, 0, nextQuestions.shift());  // and splice it into index[1]
+        console.log('else happened');
       }
       return User.findByIdAndUpdate(userID, {questions: nextQuestions}, {new: true});  //update the User with the new question list
     })
-    .then(() => res.send('Next Questions saved and ready'))
+    //!!!!!!!! This response might break something... make it user.questions if need be!!!!
+    .then(user => res.status(200).json(user.questions[0]))
     .catch(err => {
       console.log('Error:', err);
     });
