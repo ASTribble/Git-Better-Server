@@ -135,7 +135,9 @@ router.put('/v2', (req, res) => {
       console.log('questions before manipulation', questions)
       let head = user.head;
       console.log('head before ifs',head);
+
       questions[head].timesAsked++;
+      console.log('questions[head] after incrementing', questions[head]);
  //with the item at questions[head], we're going to add correct: Number timesAsked: Number
  //if answer is true, correct++, else don't do anything, either way, timesAsked++      
       if(answer){
