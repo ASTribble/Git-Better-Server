@@ -173,65 +173,6 @@ router.put('/v2', (req, res) => {
     })
     .catch(err => console.log('error in put/v2', err));     
   }); 
-      ///////////////////////////////////
-
-    //     let tempNode = user.head;
-    //     while(array[tempNode].next !== null){
-    //         tempNode = array[tempNode].next;
-    //     }
-    //     tempNode.next = user.head;
-    //     user.head = head.next
-    // }
-
-    // }) 
-  
-//     .then(() => {
-      
-//       if(req.body.answer){     //if the req.body.answer is true
-//         nextQuestions.push(nextQuestions.shift());
-//         console.log('if happened');  //push to the end of the array the item that was in the front
-//       }
-//       else {              //if the answer was false, take the item that was at the front 
-//         nextQuestions.splice(1, 0, nextQuestions.shift());  // and splice it into index[1]
-//         console.log('else happened');
-//       }
-//       return User.findByIdAndUpdate(userID, {questions: nextQuestions}, {new: true});  //update the User with the new question list
-//     })
-//     //!!!!!!!! This response might break something... make it user.questions if need be!!!!
-//     .then(user => res.status(200).json(user.questions[0]))
-//     .catch(err => {
-//       console.log('Error:', err);
-//     });
-// });
 
 module.exports = {router};
 
-//Tauhida Parveen7:38 AM
-// question:[]
-
-// question: [{question, answer, next}]
-
-// { question: string, answer: string, next: number
-
-// Tauhida ParveenTauhida Parveen7:50 AM
-// user.questions[user.head]
-
-// [{}{}{}{}{}]
-
-// {x}{y}{z}
-
-// Tauhida ParveenTauhida Parveen7:55 AM
-// {Y}{X}{X}
-
-// {question: Y, answe:, next:X}
-
-// let answeredQuestion = user.head
-
-// user.head = answeredQuestion.next
-
-// Tauhida ParveenTauhida Parveen8:00 AM
-// insertAt(0
-
-// insertAt(4, node)
-
-// user:head {type: NUmber, default: 0}
