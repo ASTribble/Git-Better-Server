@@ -122,7 +122,6 @@ router.put('/v2', (req, res) => {
   //req.body { questionId: "21561345612", answer: "true" }
   // const {questionId, answer} = req.body;
   console.log('req.body', req.body.answer);
-  let nextQuestions;
   const answer = req.body.answer;
   const userID = req.user.id;
 
@@ -137,10 +136,17 @@ router.put('/v2', (req, res) => {
       let head = user.head;
       console.log('head before ifs',head);
 
+      questions[head].timesAsked++;
+      console.log('questions[head] after incrementing', questions[head]);
+ //with the item at questions[head], we're going to add correct: Number timesAsked: Number
+ //if answer is true, correct++, else don't do anything, either way, timesAsked++      
       if(answer){
+
+          questions[head].correct++;
         //insertLast(item)
           let tempIndex = head;
           let initialHead = head;
+          
 
           while(questions[tempIndex].next !== null){
             tempIndex = questions[tempIndex].next;
