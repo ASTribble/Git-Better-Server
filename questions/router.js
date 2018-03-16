@@ -165,9 +165,12 @@ router.put('/v2', (req, res) => {
         head = nextHead;
         console.log('questions in if false answer', questions)
       }
-      return {questions, head} 
+      return User.findByIdAndUpdate(userID, {questions, head}, {new: true}) 
     })
-    .then(res => console.log('head questions passed in', res.head))
+    .then(user => {
+      console.log('user after update', user);
+      return res.sendStatus(200);
+    })
     .catch(err => console.log('error in put/v2', err));     
   }); 
       ///////////////////////////////////
