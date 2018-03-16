@@ -169,7 +169,7 @@ router.put('/v2', (req, res) => {
     })
     .then(user => {
       console.log('user after update', user);
-      return res.sendStatus(200);
+      return res.json('Here is a response');
     })
     .catch(err => console.log('error in put/v2', err));     
   }); 
