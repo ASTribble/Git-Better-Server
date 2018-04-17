@@ -23,12 +23,3 @@ QuestionSchema.methods.serialize = function(){
 const Question = mongoose.model('Question', QuestionSchema);
 
 module.exports = {Question};
-
-// Tauhida Parveen10:56 AM
-// userSchema: questions:[question:, answer, next]
-
-// userSchema.question.next =
-
-// router.post(/answer)
-
-// head = 0
