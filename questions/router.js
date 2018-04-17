@@ -31,7 +31,7 @@ router.get('/', (req, res) => {
         currentQuestions = questions;
       }
     })
-    //change this to only send back currentQuestions[0] when it won't break the client
+
     .then(() => res.json(currentQuestions[0]))
     .catch(err => {
       console.log('Error:', err);
@@ -39,6 +39,8 @@ router.get('/', (req, res) => {
     }
     );
 });
+
+
 
 //++++++++++++++++++= REFACTOR GET +++++++++++++++++++++++++++++++++++
 
@@ -55,7 +57,7 @@ router.get('/v2', (req, res) => {
      if (user.questions < 1 || !user.questions){
         Question.find()
           .then(qs => {
-            // qs.forEach((q, i) => q.next = i + 1);
+        
             const newQuestions = qs.map((q, i) => ({...q.toObject(), next: i + 1}));
             console.log('newQuestions', newQuestions);
             newQuestions[newQuestions.length-1].next = null;
@@ -77,8 +79,7 @@ router.get('/v2', (req, res) => {
       else res.json(user.questions[user.head])
     })
     .catch(err => {
-      console.log('Error:', err);
-      // return res.send(500).json({message: 'Internal Server Error'});
+      return res.send(500).json({message: 'Internal Server Error'});
     }
     );
 });
@@ -89,9 +90,7 @@ router.get('/v2', (req, res) => {
 //========================== router.put =============================
 
 router.put('/', (req, res) => {
-  //req.body { questionId: "21561345612", answer: "true" }
-  // const {questionId, answer} = req.body;
-  console.log('req.body', req.body.answer);
+
   let nextQuestions;
   const userID = req.user.id;
 
@@ -120,62 +119,60 @@ router.put('/', (req, res) => {
 
 router.put('/v2', (req, res) => {
   //req.body { questionId: "21561345612", answer: "true" }
-  // const {questionId, answer} = req.body;
-  console.log('req.body', req.body.answer);
+
   const answer = req.body.answer;
   const userID = req.user.id;
 
   // if the answer is true, we want to make user.questions[user.questions.length - 1].next = head
  // and then move user.head to questions[user.head.next] OR if (!user.head.next) user.head++
 //basically, the logic for insertLast
+
   User.findById(userID)
     .then(user => {
 
       const questions = user.questions;
-      console.log('questions before manipulation', questions)
       let head = user.head;
-      console.log('head before ifs',head);
 
       questions[head].timesAsked++;
-      console.log('questions[head] after incrementing', questions[head]);
+
  //with the item at questions[head], we're going to add correct: Number timesAsked: Number
  //if answer is true, correct++, else don't do anything, either way, timesAsked++      
       if(answer){
 
           questions[head].correct++;
+
         //insertLast(item)
           let tempIndex = head;
-          let initialHead = head;
-          
+          let initialHead = head; 
 
           while(questions[tempIndex].next !== null){
             tempIndex = questions[tempIndex].next;
           } 
           questions[tempIndex].next = head;
           head = questions[head].next;
-          questions[initialHead].next = null,
-          console.log('questions in if answer', questions)
+          questions[initialHead].next = null;
       }
       else {
         //insertAt position 2 => head.next.next(.next)
         const nextHead = questions[head].next;
         let tempIndex = head;
         let prevIndex;
+
         for(let i = 0; i < 2; i++){
           prevIndex = tempIndex;
           tempIndex = questions[tempIndex].next;
-
-        }//tempIndex is now the value at head.next.next
+        }
+        //tempIndex is now the value at head.next.next
         questions[head].next = questions[tempIndex].next;
         questions[tempIndex].next = head;
         head = nextHead;
-        console.log('questions in if false answer', questions)
       }
-      return User.findByIdAndUpdate(userID, {questions, head}, {new: true}) 
+
+      return User.findByIdAndUpdate(userID, {questions, head}, {new: true}); 
     })
+
     .then(user => {
-      console.log('user after update', user);
-      return res.json('Here is a response');
+      return res.json('Things went well.');
     })
     .catch(err => console.log('error in put/v2', err));     
   }); 
