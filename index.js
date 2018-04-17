@@ -5,6 +5,7 @@ const morgan = require('morgan');
 const passport = require('passport');
 const {PORT, CLIENT_ORIGIN, DATABASE_URL} = require('./config');
 const {dbConnect} = require('./db-mongoose');
+const mongoose = require('mongoose');
 const app = express();
 
 const {router: userRouter} = require('./users/router');
