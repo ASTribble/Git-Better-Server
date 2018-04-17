@@ -1,5 +1,5 @@
 
- [
+const seedData = [
     {
         "question": "What command would temporarily jump you back to commit 789abcd?",
         "answer": "git checkout 789abcd"
@@ -44,4 +44,6 @@
         "question":"How do you unstage the file server.js that contains changes?",
         "answer":"git reset server.js"
     }
-  ]
+  ];
+
+  module.exports = {seedData};
