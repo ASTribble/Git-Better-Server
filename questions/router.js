@@ -89,6 +89,9 @@ router.get('/v2', (req, res) => {
 
 //========================== router.put v1 =============================
 
+// This was the first interation of the spaced-repitition algorithm.
+// It utilizes array methods to reconfigure the array after a wuestion has been answered.
+
 router.put('/', (req, res) => {
 
   let nextQuestions;
@@ -115,10 +118,19 @@ router.put('/', (req, res) => {
     });
 });
 
+
 //++++++++++++++++++++++++++ PUT REFACTOR v2 +++++++++++++++++++++++++++++++++
 
+// In the refactor, we still use an array for the storage of questions, 
+// But by assigning a 'next' to each array object, we turned the array into a linked list.
+// This way, the actual items in the array never move, only the indicators for which item 
+// comes next.
+// We also added tracking for how many times a question had been asked as well as how many
+// times it was answered correctly.
+
+
 router.put('/v2', (req, res) => {
-  //req.body { questionId: "21561345612", answer: "true" }
+  //req.body === { questionId: "21561345612", answer: "true" }
 
   const answer = req.body.answer;
   const userID = req.user.id;
