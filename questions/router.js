@@ -11,7 +11,7 @@ mongoose.Promise = global.Promise;
 const {DATABASE} = require('../config');
 
 router.use(bodyParser.json());
-//=================== router.get ==============================
+//=================== router.get v1 ==============================
 
 router.get('/', (req, res) => {
   const userID = req.user.id;
@@ -42,7 +42,7 @@ router.get('/', (req, res) => {
 
 
 
-//++++++++++++++++++= REFACTOR GET +++++++++++++++++++++++++++++++++++
+//++++++++++++++++++= REFACTOR GET v2 +++++++++++++++++++++++++++++++++++
 
 
 router.get('/v2', (req, res) => {
@@ -87,7 +87,7 @@ router.get('/v2', (req, res) => {
 
 
 
-//========================== router.put =============================
+//========================== router.put v1 =============================
 
 router.put('/', (req, res) => {
 
@@ -115,7 +115,7 @@ router.put('/', (req, res) => {
     });
 });
 
-//++++++++++++++++++++++++++ PUT REFACTOR +++++++++++++++++++++++++++++++++
+//++++++++++++++++++++++++++ PUT REFACTOR v2 +++++++++++++++++++++++++++++++++
 
 router.put('/v2', (req, res) => {
   //req.body { questionId: "21561345612", answer: "true" }
