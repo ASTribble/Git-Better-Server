@@ -53,7 +53,7 @@ router.get('/v2', (req, res) => {
     .then(user => {
       console.log('user in first findById', user);
       //can change to if (user.questions[user.head]) return user.questions[user.head],
-      //else do checks for wuestions and head individually
+      //else do checks for questions and head individually
      if (user.questions < 1 || !user.questions){
         Question.find()
           .then(qs => {
