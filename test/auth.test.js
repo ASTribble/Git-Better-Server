@@ -17,11 +17,13 @@ const userTestData = require('./user-test-data');
 
 
 describe('Auth Post Endpoint', function(){
-    
+
+    //we'll need this user for all the tests
     const user = userTestData[0];
 
+    //before we can check authorization,
+    //we have to make a user to check against.
     beforeEach(function() {
-        
         return User.hashPassword(user.password)
         .then(password => {
 			User.create({
