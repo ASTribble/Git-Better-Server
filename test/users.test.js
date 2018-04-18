@@ -9,6 +9,8 @@ const {User} = require('../users/models');
 const {Question} = require('../questions/models');
 const {app} = require('../index');
 
+const userSeedData = require('./user-seed-data');
+
 
 
 describe('User POST endpoint', function(){
@@ -111,7 +113,41 @@ describe('User POST endpoint', function(){
             expect(err.message).to.deep.equal('Missing Field');
             expect(err.location).to.deep.equal('username');
         });
-    
     })
+});
+
+describe('Users GET endpoint', function(){
+
+    it('Should return all Users', function(){
+
+        return User.insertMany(userSeedData)
+        .then(() => {
+            return chai.request(app)
+            .get('/api/users')
+            .then( res => {
+                const users = res.body;
+                expect(users).to.be.an('array');
+                expect(users).to.have.lengthOf(3);
+            });
+        });
+    });
+
+    it('Should serialize users', function(){
+
+        return User.insertMany(userSeedData)
+        .then(() => {
+            return chai.request(app)
+            .get('/api/users')
+            .then( res => {
+                console.log(res.body);
+                const user = res.body[0];
+                expect(user).to.have.property('id');
+                expect(user).to.have.property('username');
+                expect(user).to.have.property('firstName');
+                expect(user).to.have.property('lastName');
+                expect(user).to.not.have.property('password');
+            });
+        });
+    });
 });
 
