@@ -51,24 +51,25 @@ router.get('/v2', (req, res) => {
 
   User.findById(userID)
     .then(user => {
-      console.log('user in first findById', user);
-      //can change to if (user.questions[user.head]) return user.questions[user.head],
-      //else do checks for questions and head individually
+
      if (user.questions < 1 || !user.questions){
+        //if the user doesn't have any questions, get all the questions from the db 
+        // and assign them an initial 'next' value
         Question.find()
           .then(qs => {
-        
+
             const newQuestions = qs.map((q, i) => ({...q.toObject(), next: i + 1}));
-            console.log('newQuestions', newQuestions);
             newQuestions[newQuestions.length-1].next = null;
+
             User.findByIdAndUpdate( userID, 
               {questions: newQuestions,
               head: 0}, 
               {upsert: true, new: true})
+
           .then(user => {
-            console.log(user);
             res.json(user.questions[user.head]); 
           })
+          
           .catch(err => console.log('line 67 error', err));
         })
       }

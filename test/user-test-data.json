@@ -1,0 +1,20 @@
+[
+    {
+    "firstName": "Kermit",
+    "lastName": "Frog",
+    "username": "Kermie",
+    "password": "banjoesRock"
+    },
+    {
+    "firstName": "Miss",
+    "lastName": "Piggy",
+    "username": "Piggy",
+    "password": "badassLady"
+    },
+    {
+    "firstName": "Fozzy",
+    "lastName": "Bear",
+    "username": "Fozzy",
+    "password": "waccaWacca"
+    }
+]
