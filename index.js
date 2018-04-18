@@ -40,17 +40,6 @@ app.get('/api/protected', jwtAuth, (req, res) => {
 
 app.use('/api/questions', jwtAuth, questionRouter);
 
-// function runServer(port = PORT) {
-//   const server = app
-//     .listen(port, () => {
-//       console.info(`App listening on port ${server.address().port}`);
-//     })
-//     .on('error', (err) => {
-//       console.error('Express failed to start');
-//       console.error(err);
-//     });
-// }
-
 
 // closeServer needs access to a server object, but that only
 // gets created when `runServer` runs, so we declare `server` here
@@ -69,6 +58,8 @@ function runServer(databaseUrl = DATABASE_URL, port = PORT) {
         resolve();
       })
         .on('error', err => {
+          console.error('Express failed to start');
+          console.error(err);
           mongoose.disconnect();
           reject(err);
         });
@@ -97,7 +88,6 @@ function closeServer() {
 
 
 if (require.main === module) {
-  // dbConnect();
   runServer().catch(err => console.error(err));
 }
 
