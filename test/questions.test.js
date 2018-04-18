@@ -104,7 +104,7 @@ describe('Questions v2 Endpoints', function(){
             });
     });
 
-    it('PUT endpoint should update User and put "true" answer at end', function(){
+    it('PUT endpoint should properly update if user answers correctly', function(){
 
         return chai.request(app)
             .get('/api/questions/v2')
@@ -114,13 +114,14 @@ describe('Questions v2 Endpoints', function(){
                 return chai.request(app)
                 .put('/api/questions/v2')
                 .set('authorization', `Bearer ${authToken}`)
-                .send( {questionId: question._id, answer: "true" })
+                .send( {questionId: question._id, answer: true })
             })
             .then(() => {
                 return User.findById(userId);
             })
             .then( updatedUser => {
-    
+                expect(updatedUser.head).to.deep.equal(1);
+
                 const questions = updatedUser.questions;
                 expect(questions).to.be.an('array').that.has.lengthOf(5);
 
@@ -140,7 +141,7 @@ describe('Questions v2 Endpoints', function(){
     });
 
 
-    it.only('PUT endpoint should update User and put "true" answer at end', function(){
+    it('PUT endpoint should update if User answers incorrectly', function(){
 
         return chai.request(app)
             .get('/api/questions/v2')
@@ -150,26 +151,28 @@ describe('Questions v2 Endpoints', function(){
                 return chai.request(app)
                 .put('/api/questions/v2')
                 .set('authorization', `Bearer ${authToken}`)
-                .send( {questionId: question._id, answer: "true" })
+                .send( {questionId: question._id, answer: false })
                })
                .then(() => {
                    return User.findById(userId);
                })
                .then( updatedUser => {
-                   console.log(updatedUser);
+                   expect(updatedUser.head).to.deep.equal(1);
+
                    const questions = updatedUser.questions;
                    expect(questions).to.be.an('array').that.has.lengthOf(5);
+
                    expect(questions[0]).to.have.property('timesAsked', 1);
-                   expect(questions[0]).to.have.property('correct', 1);
+                   expect(questions[0]).to.have.property('correct', 0);
                    expect(questions[0]).to.have.property('question', 'This is index 0');
                    expect(questions[0]).to.have.property('answer', 'answer zero');
-                   expect(questions[0]).to.have.property('next', null);
+                   expect(questions[0]).to.have.property('next', 3);
               
-                   expect(questions[4]).to.have.property('timesAsked', 0);
-                   expect(questions[4]).to.have.property('correct', 0);
-                   expect(questions[4]).to.have.property('question', 'This is index 4');
-                   expect(questions[4]).to.have.property('answer', 'answer four');
-                   expect(questions[4]).to.have.property('next', 0);      
+                   expect(questions[2]).to.have.property('timesAsked', 0);
+                   expect(questions[2]).to.have.property('correct', 0);
+                   expect(questions[2]).to.have.property('question', 'This is index 2');
+                   expect(questions[2]).to.have.property('answer', 'answer two');
+                   expect(questions[2]).to.have.property('next', 0);      
                    
                });
     });
