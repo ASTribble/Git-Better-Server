@@ -128,6 +128,9 @@ describe('Users GET endpoint', function(){
                 const users = res.body;
                 expect(users).to.be.an('array');
                 expect(users).to.have.lengthOf(3);
+                expect(users[0]).to.not.be.empty;
+                expect(users[1]).to.not.be.empty;
+                expect(users[2]).to.not.be.empty;
             });
         });
     });
