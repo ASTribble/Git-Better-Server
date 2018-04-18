@@ -16,10 +16,15 @@ const questionsTestData = require('./questions-test-data');
 
 
 describe('Questions v2 Endpoints', function(){
-    
+
+    //these are values we will want to access inside the 'it' blocks
     const user = userTestData[0];
     let userId,
         authToken;
+
+    // before testing the protected endpoints, 
+    // we have to seed the questions database
+    // and register and login a user so we have a valid authToken.
 
     beforeEach(function() {
         console.info('seeding question data');
@@ -52,7 +57,7 @@ describe('Questions v2 Endpoints', function(){
 
     
     it('GET endpoint should add questions to new user', function(){
-     
+
         return chai.request(app)
             .get('/api/questions/v2')
             .set('authorization', `Bearer ${authToken}`)
@@ -66,7 +71,8 @@ describe('Questions v2 Endpoints', function(){
                 const questions = _user.questions;
                 expect(questions).to.not.be.empty;
                 expect(questions).to.have.lengthOf(5);
-                
+
+                //questions should have default values 
                 expect(questions[0]).to.have.property('timesAsked', 0);
                 expect(questions[0]).to.have.property('correct', 0);
                 expect(questions[0]).to.have.property('question', 'This is index 0');
@@ -120,23 +126,32 @@ describe('Questions v2 Endpoints', function(){
                 return User.findById(userId);
             })
             .then( updatedUser => {
+
+                // head should have moved to the answered question's next
                 expect(updatedUser.head).to.deep.equal(1);
 
+                // question array should stay the same length
                 const questions = updatedUser.questions;
                 expect(questions).to.be.an('array').that.has.lengthOf(5);
+
+                // question at index 0 has been asked once, 
+                // and answered correctly once
+                // so it goes to the end of the line (next = null)
 
                 expect(questions[0]).to.have.property('timesAsked', 1);
                 expect(questions[0]).to.have.property('correct', 1);
                 expect(questions[0]).to.have.property('question', 'This is index 0');
                 expect(questions[0]).to.have.property('answer', 'answer zero');
                 expect(questions[0]).to.have.property('next', null);
-            
+                
+                // question at index 4 was last in line, 
+                // so now it's next should point to index 0
+                // with its other values staying the same.
                 expect(questions[4]).to.have.property('timesAsked', 0);
                 expect(questions[4]).to.have.property('correct', 0);
                 expect(questions[4]).to.have.property('question', 'This is index 4');
                 expect(questions[4]).to.have.property('answer', 'answer four');
-                expect(questions[4]).to.have.property('next', 0);      
-                
+                expect(questions[4]).to.have.property('next', 0);          
             });
     });
 
@@ -152,31 +167,34 @@ describe('Questions v2 Endpoints', function(){
                 .put('/api/questions/v2')
                 .set('authorization', `Bearer ${authToken}`)
                 .send( {questionId: question._id, answer: false })
-               })
-               .then(() => {
-                   return User.findById(userId);
-               })
-               .then( updatedUser => {
-                   expect(updatedUser.head).to.deep.equal(1);
+            })
+            .then(() => {
+                return User.findById(userId);
+            })
+            .then( updatedUser => {
+                //head should have moved to the answered question's next
+                expect(updatedUser.head).to.deep.equal(1);
 
-                   const questions = updatedUser.questions;
-                   expect(questions).to.be.an('array').that.has.lengthOf(5);
+                //question array should be the same length
+                const questions = updatedUser.questions;
+                expect(questions).to.be.an('array').that.has.lengthOf(5);
 
-                   expect(questions[0]).to.have.property('timesAsked', 1);
-                   expect(questions[0]).to.have.property('correct', 0);
-                   expect(questions[0]).to.have.property('question', 'This is index 0');
-                   expect(questions[0]).to.have.property('answer', 'answer zero');
-                   expect(questions[0]).to.have.property('next', 3);
-              
-                   expect(questions[2]).to.have.property('timesAsked', 0);
-                   expect(questions[2]).to.have.property('correct', 0);
-                   expect(questions[2]).to.have.property('question', 'This is index 2');
-                   expect(questions[2]).to.have.property('answer', 'answer two');
-                   expect(questions[2]).to.have.property('next', 0);      
-                   
-               });
+                //question at index 0 has been asked once, but not correctly,
+                //and it gets moved 2 places back in the order.
+                //Its next now points to index 2's next(3).
+                expect(questions[0]).to.have.property('timesAsked', 1);
+                expect(questions[0]).to.have.property('correct', 0);
+                expect(questions[0]).to.have.property('question', 'This is index 0');
+                expect(questions[0]).to.have.property('answer', 'answer zero');
+                expect(questions[0]).to.have.property('next', 3);
+
+                // index 2's next should point to index 0,
+                // but no other values should have changed.
+                expect(questions[2]).to.have.property('timesAsked', 0);
+                expect(questions[2]).to.have.property('correct', 0);
+                expect(questions[2]).to.have.property('question', 'This is index 2');
+                expect(questions[2]).to.have.property('answer', 'answer two');
+                expect(questions[2]).to.have.property('next', 0);           
+            });
     });
-
-
-
 });
