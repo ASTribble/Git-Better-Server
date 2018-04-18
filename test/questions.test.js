@@ -42,13 +42,11 @@ describe('Questions v2 Endpoints', function(){
             });
         })
         .then(res => {
-            console.log('created user:', res);
             userId = res._id;
             return chai.request(app)
             .post('/api/auth/login')
             .send({username: user.username, password: user.password})
             .then(res => {
-                console.log('should have authToken:', res.body)
                 authToken = res.body.authToken; 
                 return;  
             })
