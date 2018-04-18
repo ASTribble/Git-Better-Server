@@ -14,12 +14,14 @@ const jwt = require('jsonwebtoken');
 
 const userTestData = require('./user-test-data');
 
+
+
 describe('Auth Post Endpoint', function(){
     
     const user = userTestData[0];
 
     beforeEach(function() {
-
+        
         return User.hashPassword(user.password)
         .then(password => {
 			User.create({
@@ -31,6 +33,7 @@ describe('Auth Post Endpoint', function(){
         });
 	});
 
+
     it('Valid user returns authtoken', function(){
 
         return chai.request(app)
@@ -40,7 +43,6 @@ describe('Auth Post Endpoint', function(){
                 expect(res).to.have.status(200);
                 expect(res.body).to.have.property('authToken');
             });
-
     });
 
     it('Should reject user with invalid password', function(){
@@ -77,7 +79,5 @@ describe('Auth Post Endpoint', function(){
             expect(error.serverError).to.be.false;
         });  
     });
-
-
 
 });
