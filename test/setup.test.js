@@ -64,18 +64,26 @@ describe('User POST endpoint', function(){
             firstName: 'Kermit',
             lastName: 'Frog',
             username: 'Kermie',
-            password: 'banjoesRock'
+            password: 'banjoesRock',
+            stageName: 'Oscar'
         };
-
-        let res;
 
         return chai.request(app)
         .post('/api/users')
         .send(newUser)
-        .end(function (_res) {
-            res = _res;
-            expect(res).to.have.status(201);
+        .then(function() {
+            return User.find();
         })
-        .catch(err => console.error(err));
+        .then( res => {
+            expect(res).to.be.an('array');
+            const user = res[0];
+            expect(user.username).to.deep.equal(newUser.username);
+            expect(user.firstName).to.deep.equal(newUser.firstName);
+            expect(user.lastName).to.deep.equal(newUser.lastName);
+            expect(user.password).to.not.equal(newUser.password);
+            expect(user._id).to.exist;
+            expect(user._id).to.not.be.empty;
+            expect(user.stageName).to.not.exist;
+        });
     })
 });
