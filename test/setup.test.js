@@ -43,12 +43,39 @@ afterEach(function() {
 });
 
 after(function() {
-    console.log('closing server');
     return closeServer();
 });
+
+//======== Beginning of Tests ==========================
 
 describe('Mocha and Chai', function() {
     it('should be properly setup', function() {
         expect(true).to.be.true;
     });
+});
+
+describe('User POST endpoint', function(){
+
+    it('Should create a new User', function(){
+        //Strategy:
+        // make a new User,
+        //see if user is there
+        const newUser = {
+            firstName: 'Kermit',
+            lastName: 'Frog',
+            username: 'Kermie',
+            password: 'banjoesRock'
+        };
+
+        let res;
+
+        return chai.request(app)
+        .post('/api/users')
+        .send(newUser)
+        .end(function (_res) {
+            res = _res;
+            expect(res).to.have.status(201);
+        })
+        .catch(err => console.error(err));
+    })
 });
