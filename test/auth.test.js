@@ -52,10 +52,29 @@ describe('Auth Post Endpoint', function(){
             console.log('There was no error');
         })
         .catch(err => {
-            console.log(err.response.unauthorized);
             const error = err.response;
             expect(error).to.have.status(401);
             expect(error.unauthorized).to.be.true;
+            expect(error.clientError).to.be.true;
+            expect(error.serverError).to.be.false;
+        });  
+    });
+
+
+    it('Should reject unregistered user', function(){
+
+        return chai.request(app)
+        .post('/api/auth/login')
+        .send({username: 'badUser', password:'badPassword'})
+        .then( res => {
+            console.log('There was no error');
+        })
+        .catch(err => {
+            const error = err.response;
+            expect(error).to.have.status(401);
+            expect(error.unauthorized).to.be.true;
+            expect(error.clientError).to.be.true;
+            expect(error.serverError).to.be.false;
         });  
     });
 
