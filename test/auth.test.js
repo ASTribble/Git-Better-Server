@@ -5,14 +5,13 @@ const mongoose = require('mongoose');
 
 const expect = chai.expect;
 
-const {User} = require('../users/models');
-const {Question} = require('../questions/models');
 const {app} = require('../index');
+
+const {User} = require('../users/models');
+const userTestData = require('./user-test-data');
 
 const {JWT_SECRET} = require('../config');
 const jwt = require('jsonwebtoken');
-
-const userTestData = require('./user-test-data');
 
 
 
