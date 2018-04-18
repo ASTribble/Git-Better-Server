@@ -5,23 +5,24 @@ const mongoose = require('mongoose');
 
 const expect = chai.expect;
 
-const {User} = require('../users/models');
-const {Question} = require('../questions/models');
 const {app} = require('../index');
+
+const {User} = require('../users/models');
+const userTestData = require('./user-test-data');
 
 const {JWT_SECRET} = require('../config');
 const jwt = require('jsonwebtoken');
 
-const userTestData = require('./user-test-data');
-
 
 
 describe('Auth Post Endpoint', function(){
-    
+
+    //we'll need this user for all the tests
     const user = userTestData[0];
 
+    //before we can check authorization,
+    //we have to make a user to check against.
     beforeEach(function() {
-        
         return User.hashPassword(user.password)
         .then(password => {
 			User.create({

@@ -46,8 +46,8 @@ router.get('/', (req, res) => {
 
 
 router.get('/v2', (req, res) => {
+  
   const userID = req.user.id;
-  console.log('userID', userID);
 
   User.findById(userID)
     .then(user => {
