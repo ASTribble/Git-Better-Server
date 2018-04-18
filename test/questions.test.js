@@ -15,7 +15,7 @@ const userTestData = require('./user-test-data');
 const questionsTestData = require('./questions-test-data');
 
 
-describe('Questions GET Endpoint', function(){
+describe('Questions v2 Endpoints', function(){
     
     const user = userTestData[0];
     let userId,
@@ -51,8 +51,8 @@ describe('Questions GET Endpoint', function(){
     });
 
     
-    it('Should add questions to new user', function(){
-        console.log('AUTH TOKEN', authToken);
+    it('GET endpoint should add questions to new user', function(){
+     
         return chai.request(app)
             .get('/api/questions/v2')
             .set('authorization', `Bearer ${authToken}`)
@@ -60,7 +60,7 @@ describe('Questions GET Endpoint', function(){
                 return User.findById(userId);
             })
             .then(_user => {
-                console.log('user after questions added', _user);
+                
                 expect(_user).to.have.property('questions').that.is.an('array');
                 
                 const questions = _user.questions;
@@ -82,6 +82,24 @@ describe('Questions GET Endpoint', function(){
                 expect(_user).to.have.property('head').that.is.a('number');  
                 expect(_user.head).to.deep.equal(0);
             })
+    });
+
+    it.only('GET endpoint should return one question', function(){
+        console.log('AUTH TOKEN', authToken);
+        return chai.request(app)
+            .get('/api/questions/v2')
+            .set('authorization', `Bearer ${authToken}`)
+            .then(res => {
+                const question = res.body;
+
+                expect(question).to.be.an('object');
+                expect(question).to.be.not.empty;
+                expect(question).to.have.property('question').that.is.a('string');
+                expect(question).to.have.property('answer').that.is.a('string');
+                expect(question).to.have.property('timesAsked').that.is.a('number');
+                expect(question).to.have.property('correct').that.is.a('number');
+                expect(question).to.have.property('next').that.is.a('number');          
+            });
     });
 
 
