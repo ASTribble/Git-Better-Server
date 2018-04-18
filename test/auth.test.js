@@ -12,11 +12,11 @@ const {app} = require('../index');
 const {JWT_SECRET} = require('../config');
 const jwt = require('jsonwebtoken');
 
-const userSeedData = require('./user-seed-data');
+const userTestData = require('./user-test-data');
 
 describe('Auth Post Endpoint', function(){
     
-    const user = userSeedData[0];
+    const user = userTestData[0];
 
     beforeEach(function() {
 
@@ -41,6 +41,22 @@ describe('Auth Post Endpoint', function(){
                 expect(res.body).to.have.property('authToken');
             });
 
+    });
+
+    it('Should reject user with invalid password', function(){
+
+        return chai.request(app)
+        .post('/api/auth/login')
+        .send({username: user.username, password:'badPassword'})
+        .then( res => {
+            console.log('There was no error');
+        })
+        .catch(err => {
+            console.log(err.response.unauthorized);
+            const error = err.response;
+            expect(error).to.have.status(401);
+            expect(error.unauthorized).to.be.true;
+        });  
     });
 
 

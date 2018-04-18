@@ -9,7 +9,7 @@ const {User} = require('../users/models');
 const {Question} = require('../questions/models');
 const {app} = require('../index');
 
-const userSeedData = require('./user-seed-data');
+const userTestData = require('./user-test-data');
 
 
 
@@ -120,7 +120,7 @@ describe('Users GET endpoint', function(){
 
     it('Should return all Users', function(){
 
-        return User.insertMany(userSeedData)
+        return User.insertMany(userTestData)
         .then(() => {
             return chai.request(app)
             .get('/api/users')
@@ -137,12 +137,11 @@ describe('Users GET endpoint', function(){
 
     it('Should serialize users', function(){
 
-        return User.insertMany(userSeedData)
+        return User.insertMany(userTestData)
         .then(() => {
             return chai.request(app)
             .get('/api/users')
             .then( res => {
-                console.log(res.body);
                 const user = res.body[0];
                 expect(user).to.have.property('id');
                 expect(user).to.have.property('username');
