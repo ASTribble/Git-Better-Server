@@ -51,7 +51,7 @@ describe('Questions GET Endpoint', function(){
     });
 
     
-    it.only('Should add questions to new user', function(){
+    it('Should add questions to new user', function(){
         console.log('AUTH TOKEN', authToken);
         return chai.request(app)
             .get('/api/questions/v2')
