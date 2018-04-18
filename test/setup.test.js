@@ -11,7 +11,7 @@ const expect = chai.expect;
 
 // const {User} = require('../users/models');
 const {Question} = require('../questions/models');
-const {seedData} = require('../questions/seedData');
+const questionsTestData = require('./questions-test-data');
 const {app, runServer, closeServer} = require('../index');
 const {TEST_DATABASE_URL} = require('../config');
 const userTests = require('./users.test');
@@ -32,10 +32,10 @@ before(function() {
     return runServer(TEST_DATABASE_URL);
 });
 
-beforeEach(function() {
-    console.info('seeding question data');
-    return Question.insertMany(seedData);
-});
+// beforeEach(function() {
+//     console.info('seeding question data');
+//     return Question.insertMany(questionsTestData);
+// });
 
 afterEach(function() {
     console.log('dropping database');
