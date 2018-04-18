@@ -55,18 +55,24 @@ describe('Mocha and Chai', function() {
 });
 
 describe('User POST endpoint', function(){
+    
+    const 
+        firstName = 'Kermit',
+        lastName = 'Frog',
+        username = 'Kermie',
+        password = 'banjoesRock',
+        stageName = 'Oscar';
 
     it('Should create a new User', function(){
-        //Strategy:
-        // make a new User,
-        //see if user is there
+
         const newUser = {
-            firstName: 'Kermit',
-            lastName: 'Frog',
-            username: 'Kermie',
-            password: 'banjoesRock',
-            stageName: 'Oscar'
+            firstName,
+            lastName,
+            username,
+            password,
+            stageName
         };
+
 
         return chai.request(app)
         .post('/api/users')
@@ -85,5 +91,69 @@ describe('User POST endpoint', function(){
             expect(user._id).to.not.be.empty;
             expect(user.stageName).to.not.exist;
         });
+    });
+
+    it('Should reject missing password', function(){
+
+        const badUser = {
+            firstName,
+            lastName,
+            username
+        }
+
+        return chai.request(app)
+        .post('/api/users')
+        .send(badUser)
+        .then((res) => {
+            console.log('There was no error');
+        })
+        .catch(_err => {
+            expect(_err).to.have.status(422);
+
+            const err = _err.response.body;
+
+            expect(err).to.have.property('code');
+            expect(err).to.have.property('reason');
+            expect(err).to.have.property('message');
+            expect(err).to.have.property('location');
+
+            expect(err.code).to.deep.equal(422);
+            expect(err.reason).to.deep.equal('Validation Error');
+            expect(err.message).to.deep.equal('Missing Field');
+            expect(err.location).to.deep.equal('password');
+        });
+    });
+
+    it('Should reject missing username', function(){
+
+        const badUser = {
+            firstName,
+            lastName,
+            password
+        }
+
+        return chai.request(app)
+        .post('/api/users')
+        .send(badUser)
+        .then((res) => {
+            console.log('There was no error');
+        })
+        .catch(_err => {
+
+            expect(_err).to.have.status(422);
+
+            const err = _err.response.body;
+
+            expect(err).to.have.property('code');
+            expect(err).to.have.property('reason');
+            expect(err).to.have.property('message');
+            expect(err).to.have.property('location');
+
+            expect(err.code).to.deep.equal(422);
+            expect(err.reason).to.deep.equal('Validation Error');
+            expect(err.message).to.deep.equal('Missing Field');
+            expect(err.location).to.deep.equal('username');
+        });
+    
     })
 });
